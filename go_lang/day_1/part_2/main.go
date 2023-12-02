@@ -46,7 +46,7 @@ func trimEmptyStrings(input []string) []string {
 
 func main() {
 	dir, _ := os.Getwd()
-	f, err := os.Open(dir + "/day_1/data/input.txt")
+	f, err := os.Open(dir + "/data/day_1.txt")
 	check(err)
 	defer f.Close()
 
