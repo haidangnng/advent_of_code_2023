@@ -12,20 +12,6 @@ const isSymbol = (fileLines: string[], position: [number, number]): boolean => {
   return symRegex.test(fileLines[position[0]][position[1]]);
 };
 
-const isNumber = (fileLines: string[], position: [number, number]): boolean => {
-  const [x, y] = position;
-  if (
-    x < 0 ||
-    x > fileLines.length - 1 ||
-    y < 0 ||
-    y > fileLines[x].length - 1
-  ) {
-    return false;
-  }
-  const symRegex = new RegExp(/(?<number>\d+)/g);
-  return symRegex.test(fileLines[position[0]][position[1]]);
-};
-
 const partOne = (fileLines: string[]) => {
   let total: number = 0;
 
@@ -60,8 +46,43 @@ const partOne = (fileLines: string[]) => {
   console.log("total", total);
 };
 
+const findNumber = (x: RegExpMatchArray, adjacent: number[]) => {
+  for (let k = x.index; k < x.index + x[0].length; k++) {
+    if (adjacent.includes(k)) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const partTwo = (fileLines: string[]) => {
-  return;
+  let total: number = 0;
+
+  for (let i = 0; i < fileLines.length; i++) {
+    const line = fileLines[i];
+    const matches = Array.from(line.matchAll(/(?<gear>[*])/g));
+
+    matches.map((c) => {
+      const adjacent = [c.index - 1, c.index + 1, c.index];
+      const surround = [
+        ...(Array.from(fileLines[i - 1].matchAll(/(?<number>\d+)/g)).filter(
+          (x) => findNumber(x, adjacent),
+        ) || []),
+
+        ...(Array.from(fileLines[i].matchAll(/(?<number>\d+)/g)).filter((x) =>
+          findNumber(x, adjacent),
+        ) || []),
+        ...(Array.from(fileLines[i + 1].matchAll(/(?<number>\d+)/g)).filter(
+          (x) => findNumber(x, adjacent),
+        ) || []),
+      ].map((x) => parseInt(x[0]));
+      if (surround.length == 2) {
+        total += surround.reduce((a, c) => a * c, 1);
+      }
+    });
+  }
+
+  console.log("total", total);
 };
 
 export { partOne, partTwo };
