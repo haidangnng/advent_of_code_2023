@@ -71,19 +71,32 @@ func part_two() {
 
 	lines := readFile("/data/day_4.txt")
 	num_regex := regexp.MustCompile("\\d+")
+	myMap := make(map[int]uint64)
 
-	for _, line := range lines {
-
+	for index, line := range lines {
 		card := strings.Split(line, ":")[1]
 		winning_number := num_regex.FindAllString(strings.Split(card, "|")[0], -1)
 		scratch_number := num_regex.FindAllString(strings.Split(card, "|")[1], -1)
-
+		myMap[index]++
+		var winning_numbers uint64 = 0
 		for _, num := range scratch_number {
 			if isInArray(num, winning_number) {
-				total += 1
+				winning_numbers += 1
 			}
 		}
-		total += 1
+
+		for i := index + 1; i <= index+int(winning_numbers); i++ {
+			if _, exists := myMap[i]; exists {
+				myMap[i] += myMap[index]
+			} else {
+				myMap[i] = myMap[index]
+			}
+		}
+
+		// fmt.Printf("%d", total)
+		// fmt.Println()
+		// fmt.Println()
+		total += 1 * myMap[index]
 	}
 
 	fmt.Println(total)
