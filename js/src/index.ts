@@ -4,5 +4,5 @@ import { readLines } from "./utils";
 
 readLines({
   path: "../data/day_7.txt",
-  callback: partOne,
+  callback: partTwo,
 });
