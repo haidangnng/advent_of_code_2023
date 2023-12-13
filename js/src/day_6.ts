@@ -41,7 +41,6 @@ const partTwo = (fileLines: string[]) => {
   let count: number = 0;
   for (let x = 0; x < time; x++) {
     if (x * (time - x) > distance) {
-      console.log(x);
       count++;
     }
   }
